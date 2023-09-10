@@ -92,10 +92,6 @@ def get_youtube_live_url():
     return [live_url, transform_to_time_object(scheduledStartTime)]
 
 
-def youtube_is_living(youtube_live_url):
-    return youtube_live_url is not None
-
-
 def try_to_push_youtube(youtube_live_url):
     return_code = -1
 
