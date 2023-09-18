@@ -1,9 +1,8 @@
 import time
 from utils import *
 
-if __name__ == '__main__':
-    load_from_config()
 
+def try_to_push_live_stream():
     youtube_live_url = None
     schedule_start_time = None
     retry_times = 0
@@ -22,10 +21,8 @@ if __name__ == '__main__':
 
         if retry_times > 20:
             # reset youtube_url to None and wait for next live stream
-            print(f"{now}: It's time to sleep. Reset youtube_url to None and wait for next live stream.")
-            youtube_url = None
-            schedule_start_time = None
-            retry_times = 0
+            print(f"{now}: It's time to sleep, break the loop.")
+            return
 
         if youtube_live_url is None:
             print(f"{now}: Try to get youtube live url...")
@@ -52,3 +49,9 @@ if __name__ == '__main__':
             print(f"{now}: Repush youtube and twitch failed. Maybe caused by network, will retry 30s later.")
             retry_times += 1
             time.sleep(20)
+
+
+def main():
+    load_from_config()
+    while True:
+        try_to_push_live_stream()
