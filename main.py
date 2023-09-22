@@ -55,3 +55,7 @@ def main():
     load_from_config()
     while True:
         try_to_push_live_stream()
+
+
+if __name__ == "__main__":
+    main()
