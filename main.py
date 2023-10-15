@@ -1,3 +1,4 @@
+import datetime
 import time
 from utils import *
 
@@ -8,18 +9,18 @@ def try_to_push_live_stream():
     retry_times = 0
 
     # main loop：
-    # 1. reset youtube live url, schedule_start_time to None, wait for next live stream, if retry_times > 20 (about 7 minutes)
-    # 1. get YouTube live url if youtube_live_url is None
-    # 2. if the live stream is upcoming and not started yet, sleep 30s and continue
-    # 3. try to repush YouTube and twitch
-    # 4. if repush successfully, sleep 60s and continue
-    # 5. if both YouTube and twitch are not living, sleep 30 minutes and continue
-    # 6. if repush failed, sleep 20s and continue
+    # 1. reset youtube live url, schedule_start_time to None, if start stream for more than 12 hours
+    # 2. get YouTube live url if youtube_live_url is None
+    # 3. if the live stream is upcoming and not started yet, sleep 30s and continue
+    # 4. try to repush YouTube and twitch
+    # 5. if repush successfully, sleep 60s and continue
+    # 6. if both YouTube and twitch are not living, sleep 30 minutes and continue
+    # 7. if repush failed, sleep 20s and continue
 
     while True:
         now = get_bj_time()
 
-        if retry_times > 20:
+        if now - schedule_start_time > datetime.timedelta(hours=12):
             # reset youtube_url to None and wait for next live stream
             print(f"{now}: It's time to sleep, break the loop.")
             return
