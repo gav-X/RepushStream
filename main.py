@@ -20,7 +20,7 @@ def try_to_push_live_stream():
     while True:
         now = get_bj_time()
 
-        if now - schedule_start_time > datetime.timedelta(hours=12):
+        if (schedule_start_time is not None) and (now - schedule_start_time > datetime.timedelta(hours=12)):
             # reset youtube_url to None and wait for next live stream
             print(f"{now}: It's time to sleep, break the loop.")
             return
