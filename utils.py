@@ -1,3 +1,10 @@
+import googleapiclient.discovery
+import googleapiclient.errors
+
+# Create the YouTube API client
+youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+
+
 twitch_url = None
 
 
@@ -43,13 +50,29 @@ def repush_to_target_stream(original_stream_url):
     return return_code
 
 
-def get_youtube_live_url():
-    import googleapiclient.discovery
-    import googleapiclient.errors
+def get_live_streaming_url():
+    # Define the API request parameters
+    request = youtube.liveBroadcasts().list(
+        part='id,snippet,status',
+        channelId=channel_id,
+        broadcastStatus='active'
+    )
 
-    # Create the YouTube API client
-    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+    # Execute the API request
+    response = request.execute()
 
+    # Check if the channel is currently streaming
+    if response['items']:
+        print('The channel is currently streaming!')
+        stream_url = 'https://www.youtube.com/watch?v=' + response['items'][0]['id']
+        print(f'The streaming URL is: {stream_url}')
+        return stream_url
+    else:
+        print('The channel is not currently streaming.')
+        return None
+
+
+def get_upcoming_url():
     # Call the search.list method and pass the parameters
     request = youtube.search().list(
         part="snippet",
@@ -79,12 +102,12 @@ def get_youtube_live_url():
     if not response["items"]:
         return [None, None]
 
-    # Get the live streaming details from the response
+    # Get the live-streaming details from the response
     live_streaming_details = response["items"][0]["liveStreamingDetails"]
 
     scheduledStartTime = live_streaming_details["scheduledStartTime"]
 
-    # Get the live URL and live start time from the live streaming details
+    # Get the live URL and live start time from the live-streaming details
     live_url = f"https://www.youtube.com/watch?v={video_id}"
 
     print(f"The channel is live streaming: {live_url}")
