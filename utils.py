@@ -1,12 +1,6 @@
 import googleapiclient.discovery
 import googleapiclient.errors
 
-# Create the YouTube API client
-youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
-
-
-twitch_url = None
-
 
 def get_bj_time():
     import datetime
@@ -37,6 +31,10 @@ def load_from_config():
         channel_id = data["channel_id"]
         destination_url = data["destination_url"]
         twitch_url = data["twitch_url"]
+
+        global youtube
+        # Create the YouTube API client
+        youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
 
 
 def repush_to_target_stream(original_stream_url):
