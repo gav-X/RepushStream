@@ -49,24 +49,28 @@ def repush_to_target_stream(original_stream_url):
 
 
 def get_live_streaming_url():
-    # Define the API request parameters
-    request = youtube.liveBroadcasts().list(
-        part='id,snippet,status',
+    # Set up the search request
+    request = youtube.search().list(
+        part='snippet',
         channelId=channel_id,
-        broadcastStatus='active'
+        type='video',
+        eventType='live',
     )
 
-    # Execute the API request
+    # Execute the search request
     response = request.execute()
+    print("Search living streaming response: ", response)
 
-    # Check if the channel is currently streaming
-    if response['items']:
-        print('The channel is currently streaming!')
-        stream_url = 'https://www.youtube.com/watch?v=' + response['items'][0]['id']
-        print(f'The streaming URL is: {stream_url}')
+    try:
+        # Get the video ID of the live stream
+        video_id = response['items'][0]['id']['videoId']
+
+        stream_url = f"https://www.youtube.com/watch?v={video_id}"
+
+        print("The channel is live streaming: ", stream_url)
         return stream_url
-    else:
-        print('The channel is not currently streaming.')
+    except:
+        print("No living stream found.")
         return None
 
 
@@ -79,7 +83,7 @@ def get_upcoming_url():
         type="video"
     )
     response = request.execute()
-    print("Search response: ", response)
+    print("Search upcoming streaming response: ", response)
 
     # Loop through each item in the response
     items = response["items"]
